@@ -1,0 +1,4 @@
+<h1>activation email</h1>
+key:{{ activation_key }}<br>
+days:{{ activation_days }}<br>
+site:{{ site }}<br>

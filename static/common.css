@@ -1,0 +1,41 @@
+.defaultTextActive { color: #a1a1a1; font-style: italic; }
+
+html, body {height: 100%;}
+
+.layoutwrapper {
+    min-height:100%;
+    overflow:auto;
+}
+.layoutfooter {
+    margin-top: -60px; /* negative value of footer height */
+	height: 18px;
+	clear:both;
+	position: relative;
+}
+.maincontent {
+    margin-top:60px;
+    margin-bottom:60px;
+    
+}
+
+div.landmarks { 
+   max-height:400px;
+   overflow:auto;
+}
+
+.landmarks-listing div {
+    display: none;
+}
+
+.landmarks-listing label {
+    padding-bottom:6px;
+}
+
+div.landmarks-listing {
+    float:left;
+    margin-right:50px;
+}
+
+.clear {
+    clear:both;
+}

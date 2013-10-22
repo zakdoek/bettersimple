@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block head %}
+<script type="text/javascript">
+function post()
+{
+    $.ajax({
+        type: 'POST',
+        url: 'http://127.0.0.1:8000/reservation/create/',
+        contentType: "application/json; charset=utf-8",
+        dataType: "html",
+        data: {pickup_datetime:'2012-04-18 21:06:41', dropoff_datetime:'2012-04-20 21:07:49', name:'Timbo slice', phone:'23423443', email:'schilling711@gmail.com'},
+        success: function(d)
+        { 
+            alert(d); 
+        },
+        failure: function(x)
+        {
+            alert(x);
+        }
+    });
+}
+</script>
+{% endblock %}
+{% block title %}Details{% endblock %}
+
+{%  block content %}
+<input type="button" onclick="post();" value="submit" />
+
+{{ client_code }}
+{% endblock %}

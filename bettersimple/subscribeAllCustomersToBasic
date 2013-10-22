@@ -1,0 +1,27 @@
+import stripe
+from clientservice.models import *
+
+stripe.api_key = 'qM7RZmc9WWQro8qebA9bbFaXwp5YTmTd'
+
+clients = Client.objects.all()
+for client in clients:
+    if client.charge_profile.stripe_customer_id == "":
+        stripe_customer = stripe.Customer.create(plan='reservation-basic', email=client.contact_email, description=("Client ID: %s" % (client.id)))
+        client.charge_profile.stripe_customer_id = stripe_customer["id"]
+        client.charge_profile.save()
+        
+        
+import stripe
+from clientservice.models import *
+
+stripe.api_key = 'qM7RZmc9WWQro8qebA9bbFaXwp5YTmTd'
+
+stripe_customer= stripe.Customer.retrieve('cus_lYGzcsxx80e8Q9')
+stripe_customer.update_subscription(plan="reservation-basic", prorate="False")
+stripe_customer.save()
+stripe_customer.update_subscription(plan="test", prorate="True")
+stripe_customer.save()
+stripe_customer= stripe.Customer.retrieve('cus_lYGzcsxx80e8Q9')
+stripe_customer.subscription.trial_end = "now"
+stripe_customer.save()
+

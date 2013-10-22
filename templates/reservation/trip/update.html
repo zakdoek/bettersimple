@@ -1,0 +1,283 @@
+{% extends "base.html" %}
+
+{% block title %}Reservations{% endblock %}
+
+{% block head %}
+{% endblock %}
+
+{% block company_name %}{{ trip.company.name }}{% endblock %}
+
+{% block content %}
+<div class="well">
+{% if trip.id == None %}
+<form action="/reservation/create/?past_query={{past_query}}" method="post" class="form-horizontal">
+{% elif user_edit %}
+<form action="/reservation/update/{{ trip.id }}/{{ trip.uuid }}/" method="post" class="form-horizontal">
+{% else %}
+<form action="/reservation/update/{{ trip.id }}/?past_query={{past_query}}" method="post" class="form-horizontal">
+{% endif %}
+    {% csrf_token %}
+    
+    <div class="alert alert-success" id="confirmationArea" {% if not success_message %} style="display:none;" {% endif %}>
+    <strong><span id="confirmationTitle">Success! </span></strong><span id="confirmationMessage">{{success_message}}</span>
+    </div>
+    
+    {% if contact_form.errors or trip_form.errors or dropoff_address_form.errors or pickup_address_form.errors %}
+        <div class="alert alert-error">
+            <a class="close" data-dismiss="alert" href="#">×</a>
+            <strong>Uh-oh!</strong> Something didn't update correctly. Please correct the errors below.
+            {% if contact_form.non_field_errors %}
+                <br>{{ contact_form.non_field_errors }}
+            {% endif %}
+            {% if trip_form.non_field_errors %}
+                <br>{{ trip_form.non_field_errors }}
+            {% endif %}
+            {% if pickup_address_form.non_field_errors %}
+                <br>{{ pickup_address_form.non_field_errors }}
+            {% endif %}
+            {% if dropoff_address_form.non_field_errors %}
+                <br>{{ dropoff_address_form.non_field_errors }}
+            {% endif %}
+        </div>
+    {% endif %}
+    
+    {% if not user_edit %}
+        <legend>Customer Info</legend>
+        <div class="control-group {% if contact_form.name.errors %}error{% endif %}">
+          <label class="control-label" for="id_name">Customer Name</label>
+          <div class="controls">
+            {{ contact_form.name }}
+            <span class="help-inline">{{ contact_form.name.errors }}</span>
+          </div>
+        </div>
+        <div class="control-group {% if contact_form.phone.errors %}error{% endif %}">
+          <label class="control-label" for="id_phone">Phone Number</label>
+          <div class="controls">
+            {{ contact_form.phone }}
+            <span class="help-inline">{{ contact_form.phone.errors }}</span>
+          </div>
+        </div>
+        <div class="control-group {% if contact_form.email.errors %}error{% endif %}">
+          <label class="control-label" for="id_email">Email Address</label>
+          <div class="controls">
+            {{ contact_form.email }}
+            <span class="help-inline">{{ contact_form.email.errors }}</span>
+          </div>
+        </div>
+    {% endif %}
+    
+    <legend>Pickup Information</legend>
+    <div class="pickup">
+        <div class="control-group {% if trip_form.reservation_datetime.errors %}error{% endif %}">
+          <label class="control-label" for="id_reservation_datetime_0">Pickup date and time</label>
+          <div class="controls">
+            {{ trip_form.reservation_datetime }}
+            <span class="help-inline">{{ trip_form.reservation_datetime.errors }}</span>
+          </div>
+        </div>
+        {% if has_landmarks %}
+        <div class="control-group {% if pickup_address_form.landmarks.errors %}error{% endif %}">
+            <label class="control-label" for="id_pickup-landmarks">Landmark (optional)</label>
+            <div class="controls">
+                {{ pickup_address_form.landmarks }}
+            <span class="help-inline">{{ pickup_address_form.landmarks.errors }}</span>
+            </div>
+        </div>
+        {% endif %}
+        <div class="control-group {% if pickup_address_form.address.errors %}error{% endif %}">
+            <label class="control-label" for="id_pickup-address">Address</label>
+            <div class="controls">
+                {{ pickup_address_form.address }}
+            <span class="help-inline">{{ pickup_address_form.address.errors }}</span>
+            </div>
+        </div>
+        <div class="control-group {% if pickup_address_form.city.errors %}error{% endif %}">
+            <label class="control-label" for="id_pickup-city">City</label>
+            <div class="controls">
+                {{ pickup_address_form.city }}
+            <span class="help-inline">{{ pickup_address_form.city.errors }}</span>
+            </div>
+        </div>
+        <div class="control-group {% if pickup_address_form.state.errors %}error{% endif %}">
+            <label class="control-label" for="id_pickup-state">State</label>
+            <div class="controls">
+                {{ pickup_address_form.state}}
+            <span class="help-inline">{{ pickup_address_form.state.errors }}</span>
+            </div>
+        </div>
+        <div class="control-group {% if pickup_address_form.zipcode.errors %}error{% endif %}">
+            <label class="control-label" for="id_pickup-zipcode">Zipcode</label>
+            <div class="controls">
+                {{ pickup_address_form.zipcode }}
+            <span class="help-inline">{{ pickup_address_form.zipcode.errors }}</span>
+            </div>
+        </div>
+    </div>
+    
+    <legend>Dropoff Information</legend>
+    <div class="dropoff">
+        {% if has_landmarks %}
+        <div class="control-group {% if dropoff_address_form.landmarks.errors %}error{% endif %}">
+            <label class="control-label" for="id_dropoff-landmarks">Landmark (optional)</label>
+            <div class="controls">
+                {{ dropoff_address_form.landmarks }}
+            <span class="help-inline">{{ dropoff_address_form.landmarks.errors }}</span>
+            </div>
+        </div>
+        {% endif %}
+        <div class="control-group {% if dropoff_address_form.address.errors %}error{% endif %}">
+            <label class="control-label" for="id_dropoff-address">Address</label>
+            <div class="controls">
+                {{ dropoff_address_form.address }}
+            <span class="help-inline">{{ dropoff_address_form.address.errors }}</span>
+            </div>
+        </div>
+        <div class="control-group {% if dropoff_address_form.city.errors %}error{% endif %}">
+            <label class="control-label" for="id_dropoff-city">City</label>
+            <div class="controls">
+                {{ dropoff_address_form.city }}
+            <span class="help-inline">{{ dropoff_address_form.city.errors }}</span>
+            </div>
+        </div>
+        <div class="control-group {% if dropoff_address_form.state.errors %}error{% endif %}">
+            <label class="control-label" for="id_dropoff-state">State</label>
+            <div class="controls">
+                {{ dropoff_address_form.state}}
+            <span class="help-inline">{{ dropoff_address_form.state.errors }}</span>
+            </div>
+        </div>
+        <div class="control-group {% if dropoff_address_form.zipcode.errors %}error{% endif %}">
+            <label class="control-label" for="id_dropoff-zipcode">Zipcode</label>
+            <div class="controls">
+                {{ dropoff_address_form.zipcode }}
+            <span class="help-inline">{{ dropoff_address_form.zipcode.errors }}</span>
+            </div>
+        </div>
+        {% if user_edit %}
+            <div class="control-group {% if trip_form.passengers.errors %}error{% endif %}">
+              <label class="control-label" for="id_passengers"># of Passengers</label>
+              <div class="controls">
+                {{ trip_form.passengers }}
+                <span class="help-inline">{{ trip_form.passengers.errors }}</span>
+              </div>
+            </div>
+        {% endif %}
+    </div>
+    {% if industry_profile.use_special_instructions or industry_profile.use_passengers or industry_profile.use_text_message_reminders %}
+        <legend>Reservation Details</legend>
+        {% if industry_profile.use_passengers %}
+            <div class="control-group {% if trip_form.passengers.errors %}error{% endif %}">
+              <label class="control-label" for="id_passengers"># of Passengers</label>
+              <div class="controls">
+                {{ trip_form.passengers }}
+                <span class="help-inline">{{ trip_form.passengers.errors }}</span>
+              </div>
+            </div>
+        {% endif %}
+        {% if industry_profile.use_special_instructions %}
+            <div class="control-group {% if trip_form.special_instructions.errors %}error{% endif %}">
+              <label class="control-label" for="id_special_instructions">Special Instructions</label>
+              <div class="controls">
+                {{ trip_form.special_instructions }}
+                <span class="help-inline">{{ trip_form.special_instructions.errors }}</span>
+              </div>
+            </div>
+        {% endif %}
+        {% if industry_profile.use_text_message_reminders %}
+            <div class="control-group {% if trip_form.send_reminder_text.errors %}error{% endif %}">
+              <label class="control-label" for="id_send_reminder_text">Send Reminder Text?</label>
+              <div class="controls">
+                {{ trip_form.send_reminder_text }}
+                <span class="help-inline">{{ trip_form.send_reminder_text.errors }}</span>
+              </div>
+            </div>
+        {% endif %}
+    {% endif %}
+    
+    {% if not industry_profile.use_passengers %}
+        <input type="hidden" name="passengers" value="1" />
+    {% endif %}
+    
+    <div class="form-actions">
+        <div class="row">
+            <div class="span3">
+                    <input type="submit" id="submit" class="btn btn-primary" value="Save changes" />
+                    <a href="{{ return_url }}" class="btn" >Cancel</a>
+                    <button class="btn disabled" id="submitting" style="display:none;"><img src="{{ STATIC_URL }}images/ajax-loader.gif" /> Submitting</button>
+                </div>
+            <div class="span2">
+                {% if user_edit %}<button id="deleteButton" type="button" class="btn">Delete</button> {% endif %}
+            </div>
+        </div>
+    </div>
+        
+</form>
+</div>
+<input id='client_landmarks' type='hidden' value='{{client_landmarks}}' />
+{% endblock %}
+{% block endscript %}
+    <script type="text/javascript">
+    $().ready(function () {
+        var landmarks = JSON.parse($('#client_landmarks').val());
+        $('.landmark-select').change(function () {
+            for( var i = 0; i < landmarks.length; i++) {
+                if(landmarks[i].landmark_name === $(this).find(':selected').text()) {
+                    //alert('found it');
+                    if($(this).closest('.pickup').length === 1) {
+                        $('#id_pickup-address').val(landmarks[i].address);
+                        $('#id_pickup-city').val(landmarks[i].city);
+                        $('#id_pickup-state').val(landmarks[i].state);
+                        $('#id_pickup-zipcode').val(landmarks[i].zipcode);
+                    }
+                    else {
+                        $('#id_dropoff-address').val(landmarks[i].address);
+                        $('#id_dropoff-city').val(landmarks[i].city);
+                        $('#id_dropoff-state').val(landmarks[i].state);
+                        $('#id_dropoff-zipcode').val(landmarks[i].zipcode);
+                    }
+                    break;
+                }
+            }
+        });
+        
+        $('.address-field').change(function () {
+            if($(this).parent().parent().parent().find('#id_pickup-landmarks').length === 1) {
+                $(this).parent().parent().parent().find('#id_pickup-landmarks').val(0);
+            }
+            else if($(this).parent().parent().parent().find('#id_dropoff-landmarks').length === 1) {
+                $(this).parent().parent().parent().find('#id_dropoff-landmarks').val(0);
+            }
+        });
+        
+        $('#deleteButton').click(function () {
+            var data = {id : {{trip.id}} };
+            AjaxWrapper('POST', '/reservation/{{trip.id}}/{{ trip.uuid }}/delete/', data, function (d) {
+                var success = false;
+                success = (d != null && JSON.parse(d) != null && JSON.parse(d).success);
+                if(success) {
+                    $('#confirmationArea').css('display', '');
+                    $('#confirmationMessage').text('Your reservation has successfully been deleted. You may close this window now.');
+                    // disable all input for the user
+                    $('input, button, select').addClass('disabled');
+                    $('input, button, select').attr('disabled', 'disabled');
+                }
+                else {
+                    $('#confirmationArea').removeClass('alert-success');
+                    $('#confirmationArea').addClass('alert-error');
+                    $('#confirmationArea').css('display', '');
+                    $('#confirmationTitle').text('Whoops!');
+                    $('#confirmationMessage').text('There was a problem with deleting your reservation. If you continue to experience this problem, please let me know (my contact information is at the bottom of the page).');                    
+                }
+            });
+        });
+        
+        $('#submit').click(function () {
+			// display the submitting button.
+			$('#submitting').siblings().css('display', 'none');
+			$('#deleteButton').css('display', 'none');
+			$('#submitting').css('display', '');
+			return true;
+        });
+    });
+    </script>
+{% endblock %}

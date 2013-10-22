@@ -1,0 +1,234 @@
+{% extends "base.html" %}
+
+{% block title %}Update your information{% endblock %}
+
+{% block head %}
+{% endblock %}
+
+{% block content %}
+
+<div class="well">
+<form action="/clients/update/" method="post" class="form-horizontal">
+    {% csrf_token %}
+    
+    {% if show_confirmation %}
+        <div class="alert alert-success">
+            <a class="close" data-dismiss="alert" href="#">×</a>
+            <strong>Hooray!</strong> {{ confirmation_message }}
+        </div>
+    {% endif %}
+    
+    <div class="alert alert-warning" style="display:{% if stripe_customer_id != "" %}none{% endif %};" id="card-warning">
+        <a class="close" data-dismiss="alert" href="#">×</a>
+        <strong>Heads up!</strong> You still have yet to setup a credit card. Please click the "Edit Credit Card" button below.
+    </div>
+    
+    {% if client_form.errors or industry_profile.errors%}
+        <div class="alert alert-error">
+            <a class="close" data-dismiss="alert" href="#">×</a>
+            <strong>Uh-oh!</strong> Something didn't update correctly. Please correct the errors below.
+            {% if client_form.non_field_errors %}
+                <br>{{ client_form.non_field_errors }}
+            {% endif %}
+            {% if industry_profile_form.non_field_errors %}
+                <br>{{ industry_profile_form.non_field_errors }}
+            {% endif %}
+        </div>
+    {% endif %}
+    <legend>Your Details</legend>
+    <div class="control-group {% if client_form.name.errors %}error{% endif %}">
+      <label class="control-label" for="id_name">Company Name</label>
+      <div class="controls">
+        {{ client_form.name }}
+        <span class="help-inline">{{ client_form.name.errors }}</span>
+      </div>
+    </div>
+    <div class="control-group {% if client_form.client_phone.errors %}error{% endif %}">
+      <label class="control-label" for="id_client_phone">Customer Service Phone #</label>
+      <div class="controls">
+        {{ client_form.client_phone }}
+        <span class="help-inline">{{ client_form.client_phone.errors }}</span>
+        <p class="help-block">This is the phone number that will be displayed to your customers.</p>
+      </div>
+    </div>
+    <div class="control-group {% if client_form.client_email.errors %}error{% endif %}">
+      <label class="control-label" for="id_client_email">Customer Service Email</label>
+      <div class="controls">
+        {{ client_form.client_email }}
+        <span class="help-inline">{{ client_form.client_email.errors }}</span>
+        <p class="help-block">This is the email address that will be displayed to your customers.</p>
+      </div>
+    </div>
+    <div class="control-group {% if client_form.contact_name.errors %}error{% endif %}">
+      <label class="control-label" for="id_contact_name">Technical Contact</label>
+      <div class="controls">
+        {{ client_form.contact_name }}
+        <span class="help-inline">{{ client_form.contact_name.errors }}</span>
+        <p class="help-block">This is the name of the person at your company that I should contact if there are issues with our integration.</p>
+      </div>
+    </div>
+    <div class="control-group {% if client_form.contact_phone.errors %}error{% endif %}">
+      <label class="control-label" for="id_contact_phone">Technical Phone #</label>
+      <div class="controls">
+        {{ client_form.contact_phone }}
+        <span class="help-inline">{{ client_form.contact_phone.errors }}</span>
+        <p class="help-block">This is the phone number I can call to contact your technical contact.</p>
+      </div>
+    </div>
+    <div class="control-group {% if client_form.contact_email.errors %}error{% endif %}">
+      <label class="control-label" for="id_contact_email">Technical Email</label>
+      <div class="controls">
+        {{ client_form.contact_email }}
+        <span class="help-inline">{{ client_form.contact_email.errors }}</span>
+        <p class="help-block">This is the email I can use to contact your technical contact.</p>
+      </div>
+    </div>
+    <div class="control-group {% if client_form.timezone_name.errors %}error{% endif %}">
+      <label class="control-label" for="id_timezone_name">Timezone</label>
+      <div class="controls">
+        {{ client_form.timezone_name }}
+        <span class="help-inline">{{ client_form.timezone_name.errors }}</span>
+      </div>
+    </div>
+    <div class="control-group {% if client_form.address.errors %}error{% endif %}">
+        <label class="control-label" for="id_address">Address</label>
+        <div class="controls">
+            {{ client_form.address }}
+        <span class="help-inline">{{ client_form.address.errors }}</span>
+        </div>
+    </div>
+    <div class="control-group {% if client_form.city.errors %}error{% endif %}">
+        <label class="control-label" for="id_city">City</label>
+        <div class="controls">
+            {{ client_form.city }}
+        <span class="help-inline">{{ client_form.city.errors }}</span>
+        </div>
+    </div>
+    <div class="control-group {% if client_form.state.errors %}error{% endif %}">
+        <label class="control-label" for="id_state">State</label>
+        <div class="controls">
+            {{ client_form.state}}
+        <span class="help-inline">{{ client_form.city.errors }}</span>
+        </div>
+    </div>
+    <div class="control-group {% if client_form.zipcode.errors %}error{% endif %}">
+        <label class="control-label" for="id_zipcode">Zipcode</label>
+        <div class="controls">
+            {{ client_form.zipcode }}
+        <span class="help-inline">{{ client_form.zipcode.errors }}</span>
+        <p class="help-block">If you have to update any part of your address or name, please go re-enter your credit card information.</p>
+        </div>
+    </div>
+    <legend>Your Credit Card</legend>
+    <div class="control-group">
+        <label class="control-label"></label>
+        <div class="controls">
+            <a href="/charge/creditcard/" class="btn">Edit Credit Card</a>
+            <p class="help-block">Clicking this button will discard any unsaved changes. Please save before clicking.</p>
+        </div>
+    </div>
+    <legend>Your Reservation System</legend>
+    <div class="control-group {% if industry_profile_form.reservation_type.errors %}error{% endif %}">
+        <label class="control-label" for="id_reservation_type">Reservation Type</label>
+        <div class="controls">
+            {{ industry_profile_form.reservation_type }}
+            <span class="help-inline">{{ industry_profile_form.reservation_type.errors }}</span>
+            <p class="help-block"><a data-toggle="modal" href="#reservation_type_modal">What's the difference?</a></p>
+        </div>
+        <div id="reservation_type_modal" class="modal hide fade">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">×</button>
+                <h3>Reservation Type Differences</h3>
+            </div>
+            <div class="modal-body">
+                <strong>Appointment</strong>
+                <p>
+                    This type should be used when you want to have your customers make a reservation that only needs their contact information and the date and time. Salons, barbershops, doctors, mechanics should use this type.
+                </p>
+                <strong>Trip</strong>
+                <p>
+                    This type should be used when you want to have your customers make a reservation asks for a pickup and dropoff address. Shuttle van and limousine companies should use this type.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <a href="#" class="btn" data-dismiss="modal">Close</a>
+            </div>
+        </div>
+    </div>
+    <div class="control-group {% if industry_profile_form.use_special_instructions.errors %}error{% endif %}" style="margin-top:0; margin-bottom:0; padding-top:0; padding-bottom:0;">
+        <div class="controls" style="margin-top:0; margin-bottom:0; padding-top:0; padding-bottom:0;">
+            <label class="checkbox" style="margin-top:0; margin-bottom:0; padding-top:0; padding-bottom:0;">
+                {{ industry_profile_form.use_special_instructions }}
+                Check to allow your customers to optionally enter special instructions for the reservation.
+            </label>
+            <span class="help-inline">{{ industry_profile_form.use_special_instructions.errors }}</span>
+        </div>
+    </div>
+    <div class="control-group {% if industry_profile_form.use_passengers.errors %}error{% endif %}" style="margin-top:0; margin-bottom:0; padding-top:0; padding-bottom:0;">
+        <div class="controls" style="margin-top:0; margin-bottom:0; padding-top:0; padding-bottom:0;">
+            <label class="checkbox" style="margin-top:0; margin-bottom:0; padding-top:0; padding-bottom:0;">
+                {{ industry_profile_form.use_passengers }}
+                Check to allow your customers to select more than one attendee for the reservation.
+            </label>
+            <span class="help-inline">{{ industry_profile_form.use_passengers.errors }}</span>
+        </div>
+    </div>
+    <div class="control-group {% if client_form.landmarks.errors %}error{% endif %}">
+        <label class="control-label" for="id_landmarks">Landmarks</label>
+        <div class="controls">
+            <div class="landmarks">
+                {{ client_form.landmarks }}
+            </div>
+            <a href="/reservation/createLandmark/">Add a Landmark</a>
+            <span class="help-inline">{{ client_form.landmarks.errors }}</span>                
+            <p class="help-block">Selecting a landmark here will allow your customers to select them when making a reservation. When your customer selects one, it will automatically fill out the address form with the address seen above (hover over the cursor over the landmark name).</p>
+        </div>
+    </div>
+    <div class="form-actions">
+        <input type="submit" class="btn btn-primary" value="Save changes" />
+        <button type="button" class="btn" onclick="GoBack()">Cancel</button>
+    </div>
+</form>
+</div>
+{% endblock %}
+{% block endscript %}
+<script type="text/javascript">
+    $().ready(function () {
+        
+        // Setup the modals
+        $('.modal').modal({show:false});
+        
+        // Show the landmarks only when Trip for reservation type is selected.
+        $(".landmarks").parents('.control-group').css('display', ($('#id_reservation_type option:selected').text() === "Trip" ? '' : 'none'));
+        $('#id_reservation_type').change(function () {
+            $(".landmarks").parents('.control-group').css('display', ($('#id_reservation_type option:selected').text() === "Trip" ? '' : 'none'));
+            
+        });
+        
+        // Handle showing the addresses of landmarks when they are hovered.
+        $('.landmarks-listing').find('li').hover(function () {
+            $('#landmark-details').html($(this).children('div').html());
+        });
+        
+        $.ajax({
+                type: 'GET',
+                url: '/clients/stripeclientid/',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json", // With datatype as json, it's already parsed.
+                data: {},
+                success: function(x)
+                { 
+                    if(x.hasCard) {
+                        $('#card-warning').effect("slide", { direction: "up", mode : "show"}, 500);
+                        $('#card-warning').effect('highlight', {}, 'slow');
+                    }
+                },
+                failure: function(x)
+                {
+                    alert(x);
+                }
+            });
+    });
+</script>
+{% endblock %}
+

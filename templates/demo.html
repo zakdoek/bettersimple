@@ -1,0 +1,59 @@
+<!DOCTYPE HTML>
+<!-- saved from url=(0038)http://scissorsandsinners.com/services -->
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:fb="http://ogp.me/ns/fb#" xmlns:og="http://ogp.me/ns#" dir="ltr" lang="en-US"><head profile="http://gmpg.org/xfn/11"><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<head>
+<script type='text/javascript' src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://s3.amazonaws.com/better-simple/jquery-ui-1.8.20.custom.min.js"></script>
+<script type="text/javascript" src="https://s3.amazonaws.com/better-simple/bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="https://s3.amazonaws.com/better-simple/client/head.js"></script>
+<script type="text/javascript" src="https://s3.amazonaws.com/better-simple/json2.js"></script>
+<script type="text/javascript">
+function dateFromString(s) {
+  var bits = s.split(/[-T:Z]/g);
+  var d = new Date(bits[0], bits[1]-1, bits[2]);
+  d.setUTCHours(bits[3], bits[4], bits[5]);
+
+  return d;
+}
+
+function ConvertToLocalString(time) {
+	var timeArray = new Array(3);
+	var hours = time.getHours();
+	if(hours - 12 >= 0) {
+		timeArray[0] =  hours - 12;
+		timeArray[2] = "PM";
+	}
+	else {
+		timeArray[0] = hours;
+		timeArray[2] = "AM"
+	}
+	timeArray[0] = PrendZeroToTime(timeArray[0] == 0 ? timeArray[0]+12 : timeArray[0]);
+	timeArray[1] = PrendZeroToTime(time.getMinutes());
+	return timeArray;
+}
+
+function PrendZeroToTime(time){
+	return (time / 10 < 1 && time.toString().length < 2 ? "0" + time : time);
+}
+$().ready(function() {
+    var d = new Date();
+    $('#1').val(d.getHours());
+    $('#2').val(d.toJSON());
+    $('#3').val(dateFromString(d.toJSON()).getHours());
+    $('#4').val((new Date(d.toJSON())).getHours());
+    var time = ConvertToLocalString(d);
+    //time[0] = 5;
+    $('#5').val(time[0]);
+    $('#6').val(PrendZeroToTime(time[0]));
+});
+</script>
+</head>
+<body>
+<input type="text" id="1" width="200" /><br>
+<input type="text" id="2" width="200"/><br>
+<input type="text" id="3" width="200"/><br>
+<input type="text" id="4" width="200"/><br>
+<input type="text" id="5" width="200"/><br>
+<input type="text" id="6" width="200"/><br>
+</body>
+</html>

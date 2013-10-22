@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+
+{% block title %}Reservations{% endblock %}
+
+{% block content %}
+
+    {% if has_reservations %}
+        {% load tz %}
+        {% if show_confirmation %}
+            <div class="alert alert-success">
+                <a class="close" data-dismiss="alert" href="#">×</a>
+                <strong>Hooray!</strong> {{ confirmation_message }}
+            </div>
+        {% endif %}
+        <div class="row">
+            <div class="span3">
+                {% if reservations.has_previous or reservations.has_next %}
+                    <ul class="pager">
+                        <li>
+                        {% if reservations.has_previous %}
+                            <a href="?page={{ reservations.previous_page_number }}&show_past={{show_past}}&start_date={{ start_date }}&end_date={{ end_date }}&search_terms={{ search_terms }}"><strong>&larr; Previous</strong></a>
+                        {% else %}
+                            <a class="disabled" href=""><strong>&larr; Previous</strong></a>
+                        {% endif %}
+                        </li>
+                        <li>
+                            <span>Page {{ reservations.number }} of {{ reservations.paginator.num_pages }}</span>
+                        </li>
+                        <li>
+                        {% if reservations.has_next %}
+                            <a href="?page={{ reservations.next_page_number }}&show_past={{show_past}}&start_date={{ start_date }}&end_date={{ end_date }}&search_terms={{ search_terms }}"><strong>Next &rarr;</strong></a>
+                        {% else %} 
+                            <a href=""><strong>Next &rarr;</strong></a>
+                        {% endif %}
+                        </li>
+                    </ul>
+                {% else %}
+                    &nbsp;
+                {% endif %}
+            </div>
+            <div class="span2">
+                <a class="btn btn-primary" href="/reservation/create/">Create Reservation</a>
+            </div>
+            <div class="span7">
+                <form class="form-search">
+                <div class="row">
+                    <div class="span2">
+                        <input class="input-medium defaultText datepicker" type="text" id="start_date" title="Start date" value="{{ start_date }}" />
+                    </div>
+                    <div class="span2">
+                        <input class="input-medium defaultText datepicker"  type="text" id="end_date"  title="End date" value="{{ end_date }}" />
+                    </div>
+                    <div class="span3">
+                        <input id="searchterms" type="text" class="input-medium defaultText" title="Search term(s)" value="{{ search_terms }}" />
+                        <a id="filterbtn" class="btn">Filter</a><br>
+                        <label class="checkbox"><input id="showpast" type="checkbox" {% if show_past %}checked{% endif %}/> Show Past Reservations</label>
+                    </div>
+                </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="span12">
+                {% include partial_index %}
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="span3">
+                {% if reservations.has_previous or reservations.has_next %}
+                    <ul class="pager">
+                        <li>
+                        {% if reservations.has_previous %}
+                            <a href="?page={{ reservations.previous_page_number }}&show_past={{show_past}}&start_date={{ start_date }}&end_date={{ end_date }}&search_terms={{ search_terms }}"><strong>&larr; Previous</strong></a>
+                        {% else %}
+                            <a class="disabled" href=""><strong>&larr; Previous</strong></a>
+                        {% endif %}
+                        </li>
+                        <li>
+                            <span>Page {{ reservations.number }} of {{ reservations.paginator.num_pages }}</span>
+                        </li>
+                        <li>
+                        {% if reservations.has_next %}
+                            <a href="?page={{ reservations.next_page_number }}&show_past={{show_past}}&start_date={{ start_date }}&end_date={{ end_date }}&search_terms={{ search_terms }}"><strong>Next &rarr;</strong></a>
+                        {% else %} 
+                            <a href=""><strong>Next &rarr;</strong></a>
+                        {% endif %}
+                        </li>
+                    </ul>
+                {% else %}
+                    &nbsp;
+                {% endif %}
+            </div>
+            <div class="span2">
+                <a class="btn btn-primary" href="/reservation/create/">Create Reservation</a>
+            </div>
+            <div class="span2">
+                <a class="btn btn-primary" href="/reservation/download/?show_past={{show_past}}&start_date={{ start_date }}&end_date={{ end_date }}&search_terms={{ search_terms }}" title="Downloads a comma-separated values file.">Download to CSV</a>
+            </div>
+            <div class="span2">
+                <a class="btn btn-primary" href="/reservation/upload/" title="Uploads a file containing reservations.">Upload Reservations</a>
+            </div>
+        </div>
+    {% elif has_past_reservations %}
+     <div class="alert alert-info alert-block">
+        <h4 class="alert-heading">Sorry</h4>
+        <p style="margin-bottom:10px">There are no future reservations. You can go ahead and create one now if you'd like or show the reservations from the past.</p>
+        <a class="btn" style="margin-left:25px;" href="/reservation/create/">Create Reservation</a>
+        <a class="btn" style="margin-left:25px;" href="/reservation/?show_past=true">Show Past Reservations</a>
+        <a class="btn" style="margin-left:25px;" href="/reservation/upload/" title="Uploads a file containing reservations.">Upload Reservations</a>
+     </div>
+    {% else %}
+     <div class="alert alert-info alert-block">
+        <h4 class="alert-heading">Sorry</h4>
+        <p style="margin-bottom:10px">There are no reservations. You can go ahead and create one now if you'd like.</p>
+        <a class="btn" style="margin-left:25px;" href="/reservation/create/">Create Reservation</a>
+        <a class="btn" style="margin-left:25px;" href="/reservation/upload/" title="Uploads a file containing reservations.">Upload Reservations</a>
+     </div>
+     {% endif %}
+{% endblock %}
+{% block endscript %}
+    <script type="text/javascript">
+    $(document).ready(function () {
+        $("td.actions").find("a.delete").click( function () {
+            var id = $(this).siblings("input:hidden")[0].value;
+            var uuid = $(this).siblings("input:hidden")[1].value;
+            var data = {id : parseInt(id)};
+            var row = $(this).parent().parent();
+            $(this).css('display', 'none');
+            $(this).siblings('a').css('display', 'none');
+            $(this).siblings('button').css('display', '');
+            
+            AjaxWrapper('POST', '/reservation/'+id+'/'+uuid+'/delete/', data, function () {
+                row.css('display', 'none');
+            });
+        });
+        $('#filterbtn').click(function (){
+            var searchterms = $('#searchterms').val() === $('#searchterms')[0].title ? "" : $('#searchterms').val();
+            var start_date = $('#start_date').val() === $('#start_date')[0].title ? "" : $('#start_date').val();
+            var end_date = $('#end_date').val() === $('#end_date')[0].title ? "" : $('#end_date').val();
+            var show_past = $('#showpast').is(':checked');
+            window.location.href = "/reservation/?show_past="+show_past+"&start_date="+ start_date +"&end_date="+ end_date+"&search_terms="+searchterms;
+        });
+        $(window).keydown(function(e) {
+            if (e.keyCode == 13)    // if it is enter
+                $('#filterbtn').click();
+        });
+    });
+    </script>
+{% endblock %}

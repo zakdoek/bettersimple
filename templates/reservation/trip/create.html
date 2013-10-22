@@ -1,0 +1,185 @@
+<div class="bsbt well">
+    <form class="bsbt form-horizontal">
+    <div class="alert alert-error" id="bsbterror" style="display:none;">
+        <strong>Whoops!</strong> There were some errors with the information you supplied.
+    </div>
+    <div class="bsbt location">
+        <div class="bsbt initialride legend"><legend class="bsbt">When do you want to be picked up?<button class="bsbt close better-simple-close" data-dismiss="well" href="#">x</button></legend></div>
+        <div class="bsbt rideback legend"><legend class="bsbt"> For your ride back, when do you want to be picked up?<button class="bsbt close better-simple-close" data-dismiss="well" href="#">x</button></legend></div>
+        <div class="bsbt control-group ">
+        <label class="bsbt control-label" for="id_reservation_datetime_0">Pickup date and time</label>
+        <div class="bsbt controls">
+            {{ trip_form.reservation_datetime }}
+            <span class="bsbt help-inline"></span>
+          </div>
+        </div>
+    
+    
+        <div class="bsbt legend"><legend class="bsbt">Where do you want to be picked up from?</legend></div>
+        <div class="pickup">
+        {% if has_landmarks %}
+            <div class="bsbt control-group">
+                <label class="bsbt control-label" for="id_pickup-landmarks">Landmark (optional)</label>
+                <div class="bsbt controls">
+                    {{ pickup_address_form.landmarks }}
+                    <span class="bsbt help-inline"></span>
+                </div>
+            </div>
+        {% endif %}
+            <div class="bsbt control-group ">
+                <label class="bsbt control-label" for="id_pickup-address">Address</label>
+                <div class="bsbt controls">
+                    {{ pickup_address_form.address }}
+                    <span class="bsbt help-inline"></span>
+                </div>
+            </div>
+            <div class="bsbt control-group ">
+                <label class="bsbt control-label" for="id_pickup-city">City</label>
+                <div class="bsbt controls">
+                    {{ pickup_address_form.city }}
+                    <span class="bsbt help-inline"></span>
+                </div>
+            </div>
+            <div class="bsbt control-group ">
+                <label class="bsbt control-label" for="id_pickup-state">State</label>
+                <div class="bsbt controls">
+                     {{ pickup_address_form.state}}
+                     <span class="bsbt help-inline"></span>
+                </div>
+            </div>
+            <div class="bsbt control-group ">
+                <label class="bsbt control-label" for="id_pickup-zipcode">Zipcode</label>
+                <div class="bsbt controls">
+                    {{ pickup_address_form.zipcode}}
+                    <span class="bsbt help-inline"></span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bsbt legend"><legend class="bsbt">Where do you want to be dropped off?</legend></div>
+        <div class="dropoff">
+        {% if has_landmarks %}
+            <div class="bsbt control-group">
+                <label class="bsbt control-label" for="id_dropoff-landmarks">Landmark (optional)</label>
+                <div class="bsbt controls">
+                    {{ dropoff_address_form.landmarks }}
+                    <span class="bsbt help-inline"></span>
+                </div>
+            </div>
+        {% endif %}
+            <div class="bsbt control-group ">
+                <label class="bsbt control-label" for="id_dropoff-address">Address</label>
+                <div class="bsbt controls">
+                    {{ dropoff_address_form.address }}
+                    <span class="bsbt help-inline"></span>
+                </div>
+            </div>
+            <div class="bsbt control-group ">
+                <label class="bsbt control-label" for="id_dropoff-city">City</label>
+                <div class="bsbt controls">
+                    {{ dropoff_address_form.city }}
+                    <span class="bsbt help-inline"></span>
+                </div>
+            </div>
+            <div class="bsbt control-group ">
+                <label class="bsbt control-label" for="id_dropoff-state">State</label>
+                <div class="bsbt controls">
+                     {{ dropoff_address_form.state}}
+                     <span class="bsbt help-inline"></span>
+                </div>
+            </div>
+            <div class="bsbt control-group ">
+                <label class="bsbt control-label" for="id_dropoff-zipcode">Zipcode</label>
+                <div class="bsbt controls">
+                    {{ dropoff_address_form.zipcode}}
+                    <span class="bsbt help-inline"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+        <div class="bsbt reservation">
+            <div class="bsbt legend"><legend class="bsbt">What is your contact information?<button class="bsbt close better-simple-close" data-dismiss="well" href="#">x</button></legend></div>
+            <div class="bsbt control-group ">
+              <label class="bsbt control-label" for="id_name">Customer Name</label>
+              <div class="bsbt controls">
+                {{ contact_form.name }}
+                <span class="bsbt help-inline"></span>
+              </div>
+            </div>
+            <div class="bsbt control-group ">
+              <label class="bsbt control-label" for="id_phone">Phone Number</label>
+              <div class="bsbt controls">
+                {{ contact_form.phone }}
+                <span class="bsbt help-inline"></span>
+              </div>
+            </div>
+            <div class="bsbt control-group ">
+              <label class="bsbt control-label" for="id_email">Email Address</label>
+              <div class="bsbt controls">
+                {{ contact_form.email }}
+                <span class="bsbt help-inline"></span>
+              </div>
+            </div>
+        {% if use_passengers %}
+            <div class="bsbt control-group ">
+              <label class="bsbt control-label" for="id_passengers"># of Passengers</label>
+              <div class="bsbt controls">
+                {{ trip_form.passengers }}
+                <span class="bsbt help-inline"></span>
+              </div>
+            </div>
+        {% endif %}
+        {% if use_text_message_reminders %}
+            <div class="bsbt control-group {% if trip_form.send_reminder_text.errors %}error{% endif %}">
+              <label class="bsbt control-label" for="id_send_reminder_text">Send Reminder Text?</label>
+              <div class="bsbt controls">
+                {{ trip_form.send_reminder_text }}
+                <span class="bsbt help-inline">{{ trip_form.send_reminder_text.errors }}</span>
+                <p class="bsbt help-block">Checking this box will cause you to receive a reminder text message a day before your reservation.</p>
+              </div>
+            </div>
+        {% endif %}
+        {% if use_special_instructions %}
+            <div class="bsbt legend"><legend class="bsbt">Do you have any special instructions?</legend></div>
+            <div class="bsbt control-group ">
+              <label class="bsbt control-label" for="id_special_instructions">Instructions (optional)</label>
+              <div class="bsbt controls">
+                {{ trip_form.special_instructions }}
+                <span class="bsbt help-inline"></span>
+              </div>
+            </div>
+        {% endif %}
+        
+        </div>
+    
+        <div class="bsbt initialride">
+            <div class="bsbt control-group ">
+                <div class="bsbt controls">
+                    <button type="button" class="bsbt btn btn-primary" id="oneWayTripBtn" >Proceed</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bsbt rideback">
+            <div class="bsbt control-group ">
+                <div class="bsbt controls">
+	                <button class="bsbt btn btn-primary proceed gotoprevious">Go back</button>
+	                <button class="bsbt btn btn-primary proceed" onclick="ridebackNext_Click()">Proceed</button>
+                </div>
+            </div>
+        </div>
+        <div class="bsbt reservation">
+            <div class="bsbt control-group ">
+                <div class="bsbt controls">
+	                <button class="bsbt btn btn-primary proceed gotoprevious">Go back</button>
+	                <button class="bsbt btn btn-primary proceed" id="reserveride">Reserve Ride</button>
+	                <button class="bsbt btn disabled" id="submitting" style="display:none;"><img src="{{ STATIC_URL }}images/ajax-loader.gif" /> Submitting</button>
+                </div>
+            </div>
+            
+        </div>
+    </form>
+</div>
+
+<div id="ui-datepicker-div" class="bsbt ui-datepicker ui-widget ui-widget-content ui-helper-clearfix ui-corner-all"></div>
+{% if has_landmarks %}<span id="client_landmarks" style="display:none;visible:hidden;">{{ client_landmarks }}</span>{% endif %}

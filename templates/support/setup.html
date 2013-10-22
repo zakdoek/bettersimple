@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}Setup{% endblock %}
+
+{% block content %}
+    <div class="page-header">
+        <h1>Get Started</h1>
+    </div>
+    <p>In order to allow your customers to begin creating reservations on your website please follow the instructions below.</p>
+    <ol>
+        <li>On the file that displays the web page that you want the link to appear on, add the following immediately before the closing <code>&lt;/head&gt;</code> tag.</li>
+        
+            <pre style="padding-top:5px; padding-bottom:5px;">{{ client_code.head_code }}</pre>
+            
+        <li>In the same file, add the following code around the <code>&lt;img&gt;</code> element or text that you want to be the link that will bring up the create reservation screen.</li>
+            <pre style="padding-top:5px; padding-bottom:5px;">{{ client_code.link_code }}</pre>
+        <li>Upload your changes to your server or web hosting service and test your new integration. You can delete any test reservations that you make on this site after verifying that it works.</li>
+        <li>Provide feedback to me at <a href="mailto:schillingt@better-simple">schillingt@better-simple.com</a> so that I know what to fix or do in the future!</li>
+    </ol>
+{% endblock %}

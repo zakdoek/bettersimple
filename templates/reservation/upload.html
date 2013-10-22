@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Upload Reservations{% endblock %}
+
+{% block content %}
+    <form method="post" action="/reservation/upload/" class="form form-horizontal" enctype="multipart/form-data">
+    	{% if upload_form.errors %}
+	        <div class="alert alert-error">
+	            <a class="close" data-dismiss="alert" href="#">×</a>
+	            <strong>Uh-oh!</strong> Something didn't update correctly. Please correct the errors below.
+                <br>{{ upload_form.non_field_errors }}
+	        </div>
+	    {% endif %}
+        {% csrf_token %}
+        <legend>Upload Reservations</legend>
+        <div class="control-group {% if dropoff_address_form.state.errors %}error{% endif %}">
+            <label class="control-label" for="fake_id_reservation_file">Select a file </label>
+            <div class="controls">
+            	<input type="button" id="fake_id_reservation_file" class="btn btn-primary" value="Choose File..." />
+                <p id="fake_reservation_file_name" class="help-block" ></p>
+                <p class="help-block" >
+                	The file you upload must be a .csv type. Please see the sample file for the specific format.
+                	<br><a class="btn btn-mini" href="/reservation/upload/sample" title="Downloads a comma-separated values sample file.">Download a sample file</a>
+            	</p>
+            <span class="help-inline">{{ upload_form.reservation_file.errors }}</span>
+            </div>
+        </div> 
+        {{ upload_form.reservation_file }}
+        <div class="form-actions">
+            <input type="submit" value="Upload" class="btn btn-primary"/>
+            <a href="{{ return_url }}" class="btn" >Cancel</a>
+        </div>
+    </form>
+{% endblock %}
+ 
+{% block endscript %}
+<script type="text/javascript">
+	$().ready(function () {
+		$('#fake_id_reservation_file').click(function () {
+			$('#id_reservation_file').click();
+		});
+		$('#id_reservation_file').change(function () {
+			$('#fake_reservation_file_name').text($('#id_reservation_file').first().val());
+		});
+	});
+</script>
+{% endblock %}

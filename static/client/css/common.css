@@ -1,0 +1,18 @@
+.bsbt legend {
+    background: none;
+    font-weight: normal;
+}
+
+.bsbt form div {
+    margin: 0 0 0 0;
+}
+.bsbt div {
+    text-align: left;
+}
+.bsbt .controls {
+    background-image:none;
+    background-color:transparent;
+}
+.bsbt .btn {
+    float: none;
+}

@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}Clients{% endblock %}
+
+{% block head %}
+
+{% endblock %}
+
+{% block content %}
+<table>
+<thead>
+<tr>
+    <th>Name</th>
+    <th>Contact Phone</th>
+    <th>Contact Email</th>
+    <th>Contact Contact</th>
+    <th>Uuid</th>
+    <th></th>
+</tr>
+</thead>
+<tbody>
+    {% for client in clients %}
+        <tr>
+            <td>{{ client.name }}</td>
+            <td>{{ client.contact_phone }}</td>
+            <td>{{ client.contact_email }}</td>
+            <td>{{ client.contact_name }}</td>
+            <td>{{ client.uuid }}</td>
+            <td><a href="/clients/{{ client.id }}/">Code</a></li>
+        </tr>
+    {% endfor %}
+</tbody>
+</table>
+{% endblock %}

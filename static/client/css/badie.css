@@ -1,0 +1,17 @@
+button.btn {
+	background-image:none;
+}
+div.legend {
+	display: block;
+	width: 100%;
+	padding: 0;
+	margin-bottom: 27px;
+	line-height: 36px;
+	color: #333;
+	border: 0;
+	border-bottom: 1px solid #E5E5E5;
+	-webkit-padding-start: 2px;
+	-webkit-padding-end: 2px;
+	font: normal 62.5%/1 Tahoma,sans-serif;
+	font-size: 18.5px;
+}

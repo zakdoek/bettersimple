@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %}Reservations{% endblock %}
+
+{% block head %}
+{% endblock %}
+
+{% block content %}
+    <form action="/reservation/createLandmark/" method="post" class="form-horizontal">
+    {% csrf_token %}
+    <div class="well">
+        {% if address_form.errors %}
+            <div class="alert alert-error">
+                <a class="close" data-dismiss="alert" href="#">×</a>
+                <strong>Uh-oh!</strong> Something didn't update correctly. Please correct the errors below.
+                {% if address_form.non_field_errors %}
+                    <br>{{ address_form.non_field_errors }}
+                {% endif %}
+            </div>
+        {% endif %}
+        
+        <legend>Add new Landmark</legend>
+        <div class="control-group {% if address_form.landmark_name.errors %}error{% endif %}">
+            <label class="control-label" for="id_landmark_name">Landmark</label>
+            <div class="controls">
+                {{ address_form.landmark_name }}
+            <span class="help-inline">{{ address_form.landmark_name.errors }}</span>
+            </div>
+        </div>
+        <div class="control-group {% if address_form.address.errors %}error{% endif %}">
+            <label class="control-label" for="id_address">Address</label>
+            <div class="controls">
+                {{ address_form.address }}
+            <span class="help-inline">{{ address_form.address.errors }}</span>
+            </div>
+        </div>
+        <div class="control-group {% if address_form.city.errors %}error{% endif %}">
+            <label class="control-label" for="id_city">City</label>
+            <div class="controls">
+                {{ address_form.city }}
+            <span class="help-inline">{{ address_form.city.errors }}</span>
+            </div>
+        </div>
+        <div class="control-group {% if address_form.state.errors %}error{% endif %}">
+            <label class="control-label" for="id_state">State</label>
+            <div class="controls">
+                {{ address_form.state}}
+            <span class="help-inline">{{ address_form.state.errors }}</span>
+            </div>
+        </div>
+        <div class="control-group {% if address_form.zipcode.errors %}error{% endif %}">
+            <label class="control-label" for="id_zipcode">Zipcode</label>
+            <div class="controls">
+                {{ address_form.zipcode }}
+            <span class="help-inline">{{ address_form.zipcode.errors }}</span>
+            </div>
+        </div>
+        <div class="form-actions">
+            <div class="row">
+                <div class="span3">
+                    <input type="submit" id="submitButton" class="btn btn-primary" value="Save changes" />
+                    <a href="{{ return_url }}" class="btn" >Cancel</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

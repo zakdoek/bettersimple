@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+
+{% block title %}Reservations{% endblock %}
+
+{% block head %}
+{% endblock %}
+
+{% block company_name %}{{ reservation.company.name }}{% endblock %}
+
+{% block content %}
+<div class="well">
+{% if reservation.id == None %}
+<form action="/reservation/create/?past_query={{past_query}}" method="post" class="form-horizontal">
+{% elif user_edit %}
+<form action="/reservation/update/{{ reservation.id }}/{{ reservation.uuid }}/" method="post" class="form-horizontal">
+{% else %}
+<form action="/reservation/update/{{ reservation.id }}/?past_query={{past_query}}" method="post" class="form-horizontal">
+{% endif %}
+    {% csrf_token %}
+    
+    <div class="alert alert-success" id="confirmationArea" {% if not success_message %} style="display:none;" {% endif %}>
+    <strong><span id="confirmationTitle">Success! </span></strong><span id="confirmationMessage">{{success_message}}</span>
+    </div>
+    
+    {% if contact_form.errors or reservation_form.errors %}
+        <div class="alert alert-error">
+            <a class="close" data-dismiss="alert" href="#">×</a>
+            <strong>Uh-oh!</strong> Something didn't update correctly. Please correct the errors below.
+            {% if contact_form.non_field_errors %}
+                <br>{{ contact_form.non_field_errors }}
+            {% endif %}
+            {% if reservation_form.non_field_errors %}
+                <br>{{ reservation_form.non_field_errors }}
+            {% endif %}
+        </div>
+    {% endif %}
+    
+    {% if not user_edit %}
+        <legend>Customer Info</legend>
+        <div class="control-group {% if contact_form.name.errors %}error{% endif %}">
+          <label class="control-label" for="id_name">Customer Name</label>
+          <div class="controls">
+            {{ contact_form.name }}
+            <span class="help-inline">{{ contact_form.name.errors }}</span>
+          </div>
+        </div>
+        <div class="control-group {% if contact_form.phone.errors %}error{% endif %}">
+          <label class="control-label" for="id_phone">Phone Number</label>
+          <div class="controls">
+            {{ contact_form.phone }}
+            <span class="help-inline">{{ contact_form.phone.errors }}</span>
+          </div>
+        </div>
+        <div class="control-group {% if contact_form.email.errors %}error{% endif %}">
+          <label class="control-label" for="id_email">Email Address</label>
+          <div class="controls">
+            {{ contact_form.email }}
+            <span class="help-inline">{{ contact_form.email.errors }}</span>
+          </div>
+        </div>
+    {% endif %}
+    <legend>Reservation Details</legend>
+    <div class="control-group {% if reservation_form.reservation_datetime.errors %}error{% endif %}">
+      <label class="control-label" for="id_reservation_datetime_0">Pickup date and time</label>
+      <div class="controls">
+        {{ reservation_form.reservation_datetime }}
+        <span class="help-inline">{{ reservation_form.reservation_datetime.errors }}</span>
+      </div>
+    </div>
+    {% if industry_profile.use_passengers %}
+        <div class="control-group {% if reservation_form.passengers.errors %}error{% endif %}">
+          <label class="control-label" for="id_passengers"># of Attendees</label>
+          <div class="controls">
+            {{ reservation_form.passengers }}
+            <span class="help-inline">{{ reservation_form.passengers.errors }}</span>
+          </div>
+        </div>
+    {% else %}
+        <input type="hidden" name="passengers" value="1" />
+    {% endif %}
+    {% if industry_profile.use_special_instructions %}
+        <div class="control-group {% if reservation_form.special_instructions.errors %}error{% endif %}">
+          <label class="control-label" for="id_special_instructions">Special Instructions</label>
+          <div class="controls">
+            {{ reservation_form.special_instructions }}
+            <span class="help-inline">{{ reservation_form.special_instructions.errors }}</span>
+          </div>
+        </div>
+    {% endif %}
+    {% if industry_profile.use_text_message_reminders %}
+        <div class="control-group {% if reservation_form.send_reminder_text.errors %}error{% endif %}">
+          <label class="control-label" for="id_send_reminder_text">Send Reminder Text?</label>
+          <div class="controls">
+            {{ reservation_form.send_reminder_text }}
+            <span class="help-inline">{{ reservation_form.send_reminder_text.errors }}</span>
+          </div>
+        </div>
+    {% endif %}
+    
+    <div class="form-actions">
+        <div class="row">
+            <div class="span3">
+                    <input type="submit" id="submit" class="btn btn-primary" value="Save changes" />
+                    <a href="{{ return_url }}" class="btn" >Cancel</a>
+                    <button class="btn disabled" id="submitting" style="display:none;"><img src="{{ STATIC_URL }}images/ajax-loader.gif" /> Submitting</button>
+                </div>
+            <div class="span2">
+                {% if user_edit %}<button id="deleteButton" type="button" class="btn">Delete</button> {% endif %}
+            </div>
+        </div>
+    </div>
+        
+</form>
+</div>
+{% endblock %}
+{% block endscript %}
+    <script type="text/javascript">
+    $().ready(function () {
+        $('#deleteButton').click(function () {
+            var data = {id : {{reservation.id}} };
+            AjaxWrapper('POST', '/reservation/{{reservation.id}}/{{ reservation.uuid }}/delete/', data, function (d) {
+                var success = false;
+                success = (d != null && JSON.parse(d) != null && JSON.parse(d).success);
+                if(success) {
+                    $('#confirmationArea').css('display', '');
+                    $('#confirmationMessage').text('Your reservation has successfully been deleted. You may close this window now.');
+                    // disable all input for the user
+                    $('input, button, select').addClass('disabled');
+                    $('input, button, select').attr('disabled', 'disabled');
+                }
+                else {
+                    $('#confirmationArea').removeClass('alert-success');
+                    $('#confirmationArea').addClass('alert-error');
+                    $('#confirmationArea').css('display', '');
+                    $('#confirmationTitle').text('Whoops!');
+                    $('#confirmationMessage').text('There was a problem with deleting your reservation. If you continue to experience this problem, please let me know (my contact information is at the bottom of the page).');                    
+                }
+            });
+        });
+        
+        $('#submit').click(function () {
+			// display the submitting button.
+			$('#submitting').siblings().css('display', 'none');
+			$('#deleteButton').css('display', 'none');
+			$('#submitting').css('display', '');
+			return true;
+        });
+    });
+    </script>
+{% endblock %}

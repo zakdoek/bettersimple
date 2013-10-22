@@ -1,0 +1,82 @@
+<div class="bsbt well">
+    <form class="bsbt form-horizontal">
+    <div class="alert alert-error" id="bsbterror" style="display:none;">
+        <strong>Whoops!</strong> There were some errors with the information you supplied.
+    </div>
+    <div class="bsbt location">
+        <div class="bsbt initialride legend"><legend class="bsbt">When do you want to schedule your reservation?<button class="bsbt close better-simple-close" data-dismiss="well" href="#">x</button></legend></div>
+         <div class="bsbt control-group ">
+        <label class="bsbt control-label" for="id_reservation_datetime_0">Reservation date and time</label>
+        <div class="bsbt controls">
+            {{ reservation_form.reservation_datetime }}
+            <span class="bsbt help-inline"></span>
+          </div>
+        </div>
+    
+    
+        <div class="bsbt legend"><legend class="bsbt">What is your contact information?</legend></div>
+        <div class="bsbt control-group ">
+          <label class="bsbt control-label" for="id_name">Customer Name</label>
+          <div class="bsbt controls">
+            {{ contact_form.name }}
+            <span class="bsbt help-inline"></span>
+          </div>
+        </div>
+        <div class="bsbt control-group ">
+          <label class="bsbt control-label" for="id_phone">Phone Number</label>
+          <div class="bsbt controls">
+            {{ contact_form.phone }}
+            <span class="bsbt help-inline"></span>
+          </div>
+        </div>
+        <div class="bsbt control-group ">
+          <label class="bsbt control-label" for="id_email">Email Address</label>
+          <div class="bsbt controls">
+            {{ contact_form.email }}
+            <span class="bsbt help-inline"></span>
+          </div>
+        </div>
+    {% if use_passengers %}
+        <div class="bsbt control-group ">
+          <label class="bsbt control-label" for="id_passengers"># of Attendees</label>
+          <div class="bsbt controls">
+            {{ reservation_form.passengers }}
+            <span class="bsbt help-inline"></span>
+          </div>
+        </div>
+    {% endif %}
+    {% if use_text_message_reminders %}
+        <div class="bsbt control-group {% if trip_form.send_reminder_text.errors %}error{% endif %}">
+          <label class="bsbt control-label" for="id_send_reminder_text">Send Reminder Text?</label>
+          <div class="bsbt controls">
+            {{ trip_form.send_reminder_text }}
+            <span class="bsbt help-inline">{{ trip_form.send_reminder_text.errors }}</span>
+            <p class="bsbt help-block">Checking this box will cause you to receive a reminder text message a day before your reservation.</p>
+          </div>
+        </div>
+    {% endif %}
+    {% if use_special_instructions %}
+        <div class="bsbt legend"><legend class="bsbt">Do you have any special instructions?</legend></div>
+        <div class="bsbt control-group ">
+          <label class="bsbt control-label" for="id_special_instructions">Instructions (optional)</label>
+          <div class="bsbt controls">
+            {{ reservation_form.special_instructions }}
+            <span class="bsbt help-inline"></span>
+          </div>
+        </div>
+    {% endif %}
+    </div>
+        
+        <div class="bsbt initialride">
+            <div class="bsbt control-group ">
+                <div class="bsbt controls">
+	                <button class="bsbt btn btn-primary proceed" id="reserveride">Create Reservation</button>
+	                <button class="bsbt btn disabled" id="submitting" style="display:none;"><img src="{{ STATIC_URL }}images/ajax-loader.gif" /> Submitting</button>
+                </div>
+            </div>
+            
+        </div>
+    </form>
+</div>
+
+<div id="ui-datepicker-div" class="bsbt ui-datepicker ui-widget ui-widget-content ui-helper-clearfix ui-corner-all"></div>
