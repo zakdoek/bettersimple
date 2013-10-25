@@ -155,6 +155,7 @@ INSTALLED_APPS = (
     'charge',
     'clientservice',
     'reservation',
+    'registration',
     'message',
     'poster',
     'iron_worker',
