@@ -1,9 +1,9 @@
-
-from datetime import datetime
-from django.core.exceptions import ValidationError
-import pytz
-from bettersimple.timezone import us_timezones
 import re
+
+from django.core.exceptions import ValidationError
+
+from common.timezone import us_timezones
+
 
 # (XXX)XXX-XXXX
 # XXX-XXX-XXXX

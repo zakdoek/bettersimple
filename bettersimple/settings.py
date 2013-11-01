@@ -121,12 +121,12 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'bettersimple.custom_middlewares.TimezoneMiddleware',
+    'common.custom_middlewares.TimezoneMiddleware',
     #'bettersimple.custom_middlewares.SSLMiddleware',
-    'bettersimple.custom_middlewares.CrossOriginMiddleware',
+    'common.custom_middlewares.CrossOriginMiddleware',
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'bettersimple.custom_middlewares.StripeMiddleware', # handle the stripe api key
+    'charge.custom_middlewares.StripeMiddleware', # handle the stripe api key
 )
 
 ROOT_URLCONF = 'bettersimple.urls'

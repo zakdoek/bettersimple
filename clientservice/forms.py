@@ -5,12 +5,12 @@ from django.contrib.localflavor.us.forms import USZipCodeField
 from django.contrib.localflavor.us.us_states import US_STATES
 from django import forms
 
-from bettersimple.timezone import us_timezones
+from common.timezone import us_timezones
 
 from clientservice.models import *
 from reservation.models import ClientLandmark
-from reservation.types import reservation_types, reservation_types_sorted
-from bettersimple.custom_widgets import CheckboxSelectMultipleWithDetails
+from reservation.types import reservation_types_sorted
+from common.custom_widgets import CheckboxSelectMultipleWithDetails
 
 class PotentialClientForm(forms.ModelForm):
     class Meta:

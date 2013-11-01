@@ -1,11 +1,13 @@
 import uuid
-import pytz
 from datetime import datetime, timedelta
+
+import pytz
 from django.db import models
 from django.core import validators
 
-from bettersimple.custom_validators import *
+from common.custom_validators import *
 from clientservice.models import Client
+
 
 def make_uuid():
     return str(uuid.uuid4())

@@ -1,10 +1,9 @@
 from datetime import datetime, timedelta
 from django.utils import unittest
 from django.test import client
-import pytz
 
 from reservation.models import *
-from bettersimple.test_helpers import *
+from common.test_helpers import *
 from reservation import types
 
 # Create user

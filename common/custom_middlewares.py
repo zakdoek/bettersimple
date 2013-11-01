@@ -1,13 +1,8 @@
-
-import re
-
 from django.conf import settings
-from django.core import urlresolvers
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.utils import timezone
 from django.db import IntegrityError
 
-import stripe
 
 class TimezoneMiddleware(object):
     def process_request(self, request):
@@ -40,7 +35,3 @@ class CrossOriginMiddleware(object):
         response['Access-Control-Allow-Headers'] = 'Content-Type, x-requested-with, Content-Length, accept, Host, Origin, Refer, User-Agent, Connection'
             
         return response
-
-class StripeMiddleware(object):
-    def process_request(self, request):
-        stripe.api_key = settings.STRIPE_SECRET_KEY

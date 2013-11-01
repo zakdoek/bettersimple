@@ -6,7 +6,7 @@ from django.conf import settings
 import pytz
 from reservation import types
 
-from bettersimple.custom_validators import *
+from common.custom_validators import *
 
 def make_uuid():
     return str(uuid.uuid4())

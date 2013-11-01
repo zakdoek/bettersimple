@@ -5,8 +5,7 @@ import unicodecsv
 
 from reservation import types
 from reservation.models import *
-from clientservice.models import *
-from bettersimple.custom_widgets import SelectTimeWidget, ClassSplitDateTimeWidget
+from common.custom_widgets import ClassSplitDateTimeWidget
 
 
 class ContactForm(forms.ModelForm):
